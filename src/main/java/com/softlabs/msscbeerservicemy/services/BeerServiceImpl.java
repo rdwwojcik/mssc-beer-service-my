@@ -20,7 +20,9 @@ public class BeerServiceImpl implements BeerService{
 
     @Override
     public BeerDto saveNewBeer(BeerDto beerDto) {
-        return null;
+        return BeerDto.builder()
+                .id(UUID.randomUUID())
+                .build();
     }
 
     @Override
