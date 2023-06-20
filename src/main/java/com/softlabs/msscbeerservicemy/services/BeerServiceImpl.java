@@ -1,33 +1,46 @@
 package com.softlabs.msscbeerservicemy.services;
 
+import com.softlabs.msscbeerservicemy.domain.Beer;
+import com.softlabs.msscbeerservicemy.repositories.BeerRepository;
+import com.softlabs.msscbeerservicemy.web.controller.NotFoundException;
+import com.softlabs.msscbeerservicemy.web.mappers.BeerMapper;
 import com.softlabs.msscbeerservicemy.web.model.BeerDto;
-import com.softlabs.msscbeerservicemy.web.model.BeerStyleEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class BeerServiceImpl implements BeerService{
+
+    private final BeerRepository beerRepository;
+    private final BeerMapper beerMapper;
 
     @Override
     public BeerDto getBeerById(UUID beerId) {
-        return BeerDto.builder()
-                .id(UUID.randomUUID())
-                .beerName("Galaxy Cat")
-                .beerStyle(BeerStyleEnum.ALE)
-                .build();
+        return beerMapper.beerToBeerDto(
+                beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+        );
     }
 
     @Override
     public BeerDto saveNewBeer(BeerDto beerDto) {
-        return BeerDto.builder()
-                .id(UUID.randomUUID())
-                .build();
+        return beerMapper.beerToBeerDto(
+                beerRepository.save(beerMapper.beerDtoToBeer(beerDto))
+        );
     }
 
     @Override
-    public void updateBeer(UUID uuid, BeerDto beerDto) {
+    public BeerDto updateBeer(UUID uuid, BeerDto beerDto) {
+        Beer beer = beerRepository.findById(uuid).orElseThrow(NotFoundException::new);
 
+        beer.setBeerName(beerDto.getBeerName());
+        beer.setBeerStyle(beerDto.getBeerStyle().name());
+        beer.setPrice(beerDto.getPrice());
+        beer.setUpc(beerDto.getUpc());
+
+        return beerMapper.beerToBeerDto(beerRepository.save(beer));
     }
 
     @Override
