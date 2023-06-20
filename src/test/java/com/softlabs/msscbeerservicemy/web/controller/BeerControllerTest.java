@@ -1,6 +1,7 @@
 package com.softlabs.msscbeerservicemy.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softlabs.msscbeerservicemy.bootstrap.BeerLoader;
 import com.softlabs.msscbeerservicemy.services.BeerService;
 import com.softlabs.msscbeerservicemy.web.model.BeerDto;
 import com.softlabs.msscbeerservicemy.web.model.BeerStyleEnum;
@@ -40,6 +41,8 @@ class BeerControllerTest {
 
     @Test
     void getBeerById() throws Exception {
+        when(beerService.getBeerById(any())).thenReturn(getValidBeerDto());
+
         mockMvc.perform(get("/api/v1/beer/" + UUID.randomUUID()))
                 .andExpect(status().isOk());
     }
@@ -60,6 +63,8 @@ class BeerControllerTest {
 
     @Test
     void updateBeerById() throws Exception {
+        when(beerService.updateBeer(any(), any())).thenReturn(getValidBeerDto());
+
         String beerDtoJson = objectMapper.writeValueAsString(getValidBeerDto());
         mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,15 +72,11 @@ class BeerControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @Test
-    void deleteBeer() {
-    }
-
     BeerDto getValidBeerDto(){
         return BeerDto.builder()
                 .beerName("PaniPani")
                 .beerStyle(BeerStyleEnum.IPA)
-                .upc(1231245326000001L)
+                .upc(BeerLoader.BEER_1_UPC)
                 .price(new BigDecimal("8.99"))
                 .build();
     }
