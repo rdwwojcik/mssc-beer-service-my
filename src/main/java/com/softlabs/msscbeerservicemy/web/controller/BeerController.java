@@ -5,7 +5,6 @@ import com.softlabs.msscbeerservicemy.services.BeerService;
 import com.softlabs.msscbeerservicemy.web.model.BeerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,9 +35,4 @@ public class BeerController {
         return new ResponseEntity<>(beerService.updateBeer(beerId, beerDto),HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{beerId}")
-    public ResponseEntity deleteBeer(@PathVariable("beerId") UUID beerId){
-        log.info("DELETE BEER=======");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }
