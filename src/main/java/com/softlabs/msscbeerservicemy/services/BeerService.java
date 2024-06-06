@@ -17,4 +17,5 @@ public interface BeerService {
 
     BeerDto updateBeer(UUID uuid, BeerDto beerDto);
 
+    BeerDto getByUpc(String upc);
 }
